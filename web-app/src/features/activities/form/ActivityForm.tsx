@@ -4,18 +4,19 @@ import IActivity from '../../../app/models/activity';
 import {v4 as uuid} from 'uuid';
 
 interface IProps {
-    activity: IActivity | null;
+    activity: IActivity;
     setEditMode: (editMode: boolean) => void;
     createActivity: (activity: IActivity) => void;
     editActivity: (activity: IActivity) => void;
     setSelectedActivity: (activity: IActivity | null) => void;
+    submitting: boolean;
 }
 
-const ActivityForm: React.FC<IProps> = ({activity, setEditMode, createActivity, editActivity, setSelectedActivity}) => {
+const ActivityForm: React.FC<IProps> = ({activity: initialFormState, setEditMode, createActivity, editActivity, setSelectedActivity, submitting}) => {
 
     const initializeForm = () => {
-        if (activity) {
-            return activity;
+        if (initialFormState) {
+            return initialFormState;
         }else {
             return {
                 id: '',
@@ -29,10 +30,10 @@ const ActivityForm: React.FC<IProps> = ({activity, setEditMode, createActivity, 
         }
     };
 
-    const [Activity, setActivity] = useState<IActivity>(initializeForm);
+    const [activity, setActivity] = useState<IActivity>(initializeForm);
 
     const handleSubmit = () => {
-        let newActivity: IActivity = {...Activity};
+        let newActivity: IActivity = {...activity};
 
         if (newActivity.id.length === 0) {
             newActivity.id = uuid();
@@ -46,7 +47,7 @@ const ActivityForm: React.FC<IProps> = ({activity, setEditMode, createActivity, 
 
     const handleInputChange = (event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = event.currentTarget;
-        setActivity({...Activity, [name]: value});
+        setActivity({...activity, [name]: value});
     };
 
     return (
@@ -58,7 +59,7 @@ const ActivityForm: React.FC<IProps> = ({activity, setEditMode, createActivity, 
                 <Form.Input onChange={handleInputChange} type='datetime-local' placeholder='Date' name='date' value={activity?.date} />
                 <Form.Input onChange={handleInputChange} placeholder='City' name='city' value={activity?.city} />
                 <Form.Input onChange={handleInputChange} placeholder='Venue' name='venue' value={activity?.venue} />
-                <Button floated='right' positive content='Submit' />
+                <Button loading={submitting} floated='right' positive content='Submit' />
                 <Button floated='right' content='Cancel' onClick={ () => setEditMode(false) } />
             </Form>
         </Segment>
