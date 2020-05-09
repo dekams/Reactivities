@@ -10,3 +10,5 @@ client-app
 
 .suo
 .ide
+.vs/Reactivities/DesignTimeBuild/.dtbcache
+**/*.suo

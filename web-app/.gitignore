@@ -24,5 +24,9 @@ yarn-error.log*
 
 ../client-app
 
-.suo
-.ide
+*.suo
+*.ide
+
+../*.suo
+../*.ide
+../.dtbcache
